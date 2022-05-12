@@ -1,0 +1,3 @@
+git add .
+git commit -m "task"
+git push

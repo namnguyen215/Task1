@@ -76,7 +76,6 @@ public class ppcvTask {
         writeToParquet(res3,resPath3);
     }
     private void startSparkJob(){
-        spark.sparkContext().setLogLevel("ERROR");
         Dataset<Row> df = getData();
         topDomainByGuid(df);
         topLocationyGuid(df);
@@ -90,7 +89,6 @@ public class ppcvTask {
 //                .set("spark.shuffle.service.enabled","true")
 //                .set("spark.dynamicAllocation.minExecutors", "1")
 //                .set("spark.dynamicAllocation.maxExecutors", "20");
-
         ppcvTask Task=new ppcvTask();
         Task.startSparkJob();
 

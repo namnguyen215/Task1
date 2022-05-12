@@ -1,9 +1,6 @@
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-
-import java.io.IOException;
-
 import static org.apache.spark.sql.functions.*;
 import static org.apache.spark.sql.functions.col;
 
@@ -59,7 +56,7 @@ public class apcdxTask {
         countBannerIdByDomain(sqlCountBannerIdByDomain,res3);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
         apcdxTask Task=new apcdxTask();
         Task.startSparkJob();
     }
