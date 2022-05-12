@@ -12,6 +12,15 @@ import static org.apache.spark.sql.functions.col;
 import static org.apache.spark.sql.functions.count;
 
 public class ppcvTask {
+    static final SparkSession spark = SparkSession.builder().master("yarn").getOrCreate();
+    static String dataPath = "hdfs:/DataIntern2022/data/ppcv/*";
+    static String resPath1 = "hdfs:/DataIntern2022/result/ppcv/res1";
+    static String resPath2 = "hdfs:/DataIntern2022/result/ppcv/res2";
+    static String resPath3 = "hdfs:/DataIntern2022/result/ppcv/res3";
+    static Dataset<Row> getData() {
+        Dataset<Row> df = spark.read().format("parquet").load(dataPath);
+        return df;
+    }
     public static void main(String[] args) {
 //        SparkConf sparkConf = new SparkConf().setAppName("ppcvTask")
 //                .set("spark.dynamicAllocation.enabled", "true")
@@ -22,6 +31,8 @@ public class ppcvTask {
         SparkSession spark = SparkSession.builder().master("yarn").getOrCreate();
         spark.sparkContext().setLogLevel("ERROR");
         Dataset<Row> df = spark.read().format("parquet").load("hdfs:/DataIntern2022/data/ppcv/*");
+
+
         //Lấy top 5 domain có số lượng GUID nhiều nhất.
         Dataset<Row> res1 = df
                 .select(col("domain").cast("String"),col("guid"))
@@ -30,8 +41,10 @@ public class ppcvTask {
                 .orderBy(col("count(guid)").desc())
                 .limit(5);
         res1=res1.withColumnRenamed("count(guid)","Numbers of guid");
-//        res1.show(false);
-        res1.write().parquet("hdfs:/DataIntern2022/result/ppcv/res1");
+        res1.write().parquet(resPath1);
+
+
+
         //Lấy top 5 vị trí địa lý có nhiều GUID truy cập nhất. Vị trí địa lý sử dụng trường locid >1.
         Dataset<Row> res2=df.filter("locid>1")
                 .select(col("locid"),col("guid"))
@@ -40,16 +53,15 @@ public class ppcvTask {
                 .orderBy(col("count(guid)").desc())
                 .limit(5);
         res2=res2.withColumnRenamed("count(guid)","Numbers of guid");
-//        res2.show(false);
-        res2.write().parquet("hdfs:/DataIntern2022/result/ppcv/res1");
+        res2.write().parquet(resPath2);
+
+
+
         //Tính tỉ lệ pageview phát sinh từ google, fb.
-        Dataset<Row> pageViewGGandFB=df.select(col("refer").cast("String"))
-                .filter(col("refer")
-                        .rlike("google.com|com.google|facebook.com"));
-        long pageViewGoogle = pageViewGGandFB
+        long pageViewGoogle = df.select(col("refer").cast("String"))
                 .filter(col("refer")
                         .rlike("google.com|com.google")).count();
-        long pageViewFacebook =  pageViewGGandFB
+        long pageViewFacebook =  df.select(col("refer").cast("String"))
                 .filter(col("refer")
                         .rlike("facebook.com")).count();
         long total=df.count();
@@ -61,7 +73,6 @@ public class ppcvTask {
         nums.add(RowFactory.create("Google", (pageViewGoogle*1.0/total)*100));
         nums.add(RowFactory.create("Facebook", (pageViewFacebook*1.0/total)*100));
         Dataset<Row> res3 = spark.createDataFrame(nums, structType);
-//        res3.show(false);
-        res3.write().parquet("hdfs:/DataIntern2022/result/ppcv/res1");
+        res3.write().parquet(resPath3);
     }
 }
