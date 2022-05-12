@@ -23,19 +23,19 @@ public class apcdxTask {
         df.createOrReplaceTempView("data");
         Dataset<Row> sqlDF1 = spark.sql("SELECT time_day,bannerId, count(guid) as numberOfGuids FROM data GROUP BY time_day, bannerId");
         System.out.println("So GUID theo bannerId theo ngay");
-        sqlDF1.show();
-
+//        sqlDF1.show();
+        sqlDF1.write().parquet("hdfs:/DataIntern2022/result/apcdx/res1");
         //- Đếm số  GUID theo từng bannerid theo tháng
 
         Dataset<Row> sqlDF2 = spark.sql("SELECT time_month,bannerId, count(guid) as numberOfGuids FROM data GROUP BY time_month, bannerId");
         System.out.println("So GUID theo banner theo thang");
-        sqlDF2.show();
-//        sqlDF2.write().parquet("src/main/result/apcdx/res2");
+//        sqlDF2.show();
+        sqlDF2.write().parquet("hdfs:/DataIntern2022/result/apcdx/res2");
         //- Tính toán việc phân bổ bannerid theo từng domain
 
         Dataset<Row> sqlDF3 = spark.sql("SELECT domain, count(bannerId) as numberOfBannerIds FROM data GROUP BY domain");
         System.out.println("So bannerId theo domain");
-        sqlDF3.show();
-//        sqlDF3.write().parquet("src/main/result/apcdx/res3");
+//        sqlDF3.show();
+        sqlDF3.write().parquet("hdfs:/DataIntern2022/result/apcdx/res3");
     }
 }

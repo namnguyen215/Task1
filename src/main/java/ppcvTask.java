@@ -30,7 +30,8 @@ public class ppcvTask {
                 .orderBy(col("count(guid)").desc())
                 .limit(5);
         res1=res1.withColumnRenamed("count(guid)","Numbers of guid");
-        res1.show(false);
+//        res1.show(false);
+        res1.write().parquet("hdfs:/DataIntern2022/result/ppcv/res1");
         //Lấy top 5 vị trí địa lý có nhiều GUID truy cập nhất. Vị trí địa lý sử dụng trường locid >1.
         Dataset<Row> res2=df.filter("locid>1")
                 .select(col("locid"),col("guid"))
@@ -39,7 +40,8 @@ public class ppcvTask {
                 .orderBy(col("count(guid)").desc())
                 .limit(5);
         res2=res2.withColumnRenamed("count(guid)","Numbers of guid");
-        res2.show(false);
+//        res2.show(false);
+        res2.write().parquet("hdfs:/DataIntern2022/result/ppcv/res1");
         //Tính tỉ lệ pageview phát sinh từ google, fb.
         Dataset<Row> pageViewGGandFB=df.select(col("refer").cast("String"))
                 .filter(col("refer")
@@ -59,6 +61,7 @@ public class ppcvTask {
         nums.add(RowFactory.create("Google", (pageViewGoogle*1.0/total)*100));
         nums.add(RowFactory.create("Facebook", (pageViewFacebook*1.0/total)*100));
         Dataset<Row> res3 = spark.createDataFrame(nums, structType);
-        res3.show(false);
+//        res3.show(false);
+        res3.write().parquet("hdfs:/DataIntern2022/result/ppcv/res1");
     }
 }
