@@ -12,13 +12,12 @@ import static org.apache.spark.sql.functions.col;
 import static org.apache.spark.sql.functions.count;
 
 public class ppcvTask {
-    private SparkSession spark ;
+    static final SparkSession spark = SparkSession.builder().master("yarn").getOrCreate();
     static String dataPath = "hdfs:/DataIntern2022/data/ppcv/*";
     static String resPath1 = "hdfs:/DataIntern2022/result/ppcv/res1";
     static String resPath2 = "hdfs:/DataIntern2022/result/ppcv/res2";
     static String resPath3 = "hdfs:/DataIntern2022/result/ppcv/res3";
-    Dataset<Row> getData() {
-        spark = SparkSession.builder().master("yarn").getOrCreate();
+    static Dataset<Row> getData() {
         Dataset<Row> df = spark.read().format("parquet").load(dataPath);
         return df;
     }

@@ -1,11 +1,4 @@
 ### **1. ppcv**
-- Đề bài:
-  - Lấy top 5 domain có số lượng GUID nhiều nhất.
-  - Lấy top 5 vị trí địa lý có nhiều GUID truy cập nhất. Vị trí địa lý sử dụng trường locid >1.
-  - Tính tỉ lệ pageview phát sinh từ google, fb. Sử dụng trường refer để giải quyết
-- Cách làm:
-  - Lấy ra các cột cần thiết từ dataset ban đầu, gom nhóm và tổng hợp.
-  - Ghi kết quả ra file
 - Chạy task bằng lệnh spark-submit:
 
 `  spark-submit --class ppcvTask\
@@ -14,6 +7,7 @@
   --executor-cores 2 \
   --executor-memory 2G \
   target/Task1-1.0-SNAPSHOT.jar`
+
 
 
 
@@ -26,13 +20,6 @@
     - ![img_2.png](img_2.png)
 
 ### **2. apcdx**
-- Đề bài:
-  - Đếm số  GUID theo từng bannerid theo ngày
-  - Đếm số  GUID theo từng bannerid theo tháng
-  - Tính toán việc phân bổ bannerid theo từng domain
-- Cách làm:
-  - Sử dụng câu lệnh SQL để giải quyết bài toán
-  - Ghi kết quả ra file
 - **Chạy task bằng spark-submit:**
 
 `  spark-submit --class apcdxTask\
