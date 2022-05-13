@@ -5,7 +5,7 @@ import static org.apache.spark.sql.functions.*;
 import static org.apache.spark.sql.functions.col;
 
 public class apcdxTask {
-    static final SparkSession spark = SparkSession.builder().master("yarn").getOrCreate();
+    private SparkSession spark ;
     static String dataPath = "hdfs:/DataIntern2022/data/apcdx/*";
     static String sqlCountGuidByBannerIdByDay = "SELECT time_day,bannerId, count(guid) as numberOfGuids FROM data GROUP BY time_day, bannerId";
     static String res1 = "hdfs:/DataIntern2022/result/apcdx/res1";
@@ -14,7 +14,8 @@ public class apcdxTask {
     static String sqlCountBannerIdByDomain = "SELECT domain, count(bannerId) as numberOfBannerIds FROM data GROUP BY domain";
     static String res3 = "hdfs:/DataIntern2022/result/apcdx/res3";
 
-    static Dataset<Row> getData() {
+    private Dataset<Row> getData() {
+        spark= SparkSession.builder().master("yarn").getOrCreate();
         Dataset<Row> df = spark.read().format("parquet").load(dataPath);
         df = df.filter("click_or_view == 'false'")
                 .select((col("time_group.time_create").divide(1000).cast("timestamp").as("time_create"))
